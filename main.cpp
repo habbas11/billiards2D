@@ -5,6 +5,8 @@
 using namespace std;
 
 const GLfloat PI = acos(-1);
+const int HEIGHT = 800;
+const int WIDTH = 1000;
 
 void drawTable() {
 //    glColor3f(0.0f, 0.0f, 0.0f);
@@ -186,11 +188,11 @@ void drawTable() {
 void init() {
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(1000, 600);
-    glutCreateWindow("Billiard_2D");
+    glutCreateWindow("BCG601 - Billiards 2D");
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glViewport(0, 0, 1000, 800);
-    glOrtho(0.0, 1000, 0.0, 800, -100.0, 100.0);
+    glViewport(0, 0, WIDTH, HEIGHT);
+    glOrtho(0.0, WIDTH, 0.0, HEIGHT, -100.0, 100.0);
 }
 
 void drawMidCircle() {
@@ -214,6 +216,8 @@ void drawMidLine() {
     glEnd();
 }
 
+// just for demo
+// TODO: Remove
 void drawTableBorders() {
     glColor3f(0.6f, 0.45f, 0.06f);
     glBegin(GL_LINE_STRIP);
@@ -246,7 +250,7 @@ void drawTableBorders() {
     glEnd();
 }
 
-void drawCircle(double x, double y, double z, double radius, double lightPos) {
+void drawHoleCircle(double x, double y, double z, double radius, double lightPos) {
     glCullFace(GL_BACK);
 
     glEnable(GL_DEPTH_TEST);
@@ -268,15 +272,11 @@ void drawCircle(double x, double y, double z, double radius, double lightPos) {
 
 
 
-
-
 //    glColor3ub(red, green, blue);
     glPushMatrix();
     glTranslated(x, y, z);
     glutSolidSphere(radius, 50, 50);
     glPopMatrix();
-
-
 }
 
 void draw() {
@@ -308,17 +308,17 @@ void draw() {
     // x += 15, y += 15
 
     // down leftmost hole
-    drawCircle(68, 79, 0, 26, -0.4);
+    drawHoleCircle(68, 79, 0, 26, -0.6);
     // down rightmost hole
-    drawCircle(930, 79, 0, 26, 0.4);
+    drawHoleCircle(930, 79, 0, 26, 0.6);
     // down mid-hole
-    drawCircle(500, 79, 0, 26, 0.0);
+    drawHoleCircle(500, 79, 0, 26, 0.0);
     // up leftmost hole
-    drawCircle(70, 721, 0, 26, -0.4);
+    drawHoleCircle(70, 721, 0, 26, -0.4);
     // up rightmost hole
-    drawCircle(930, 721, 0, 26, 0.4);
+    drawHoleCircle(930, 721, 0, 26, 0.4);
     // up mid-hole
-    drawCircle(500, 721, 0, 26, 0.0);
+    drawHoleCircle(500, 721, 0, 26, 0.0);
 
     glutSwapBuffers();
 }
