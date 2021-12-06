@@ -8,6 +8,7 @@ const GLfloat PI = acos(-1);
 const int HEIGHT = 800;
 const int WIDTH = 1000;
 
+
 void drawTable() {
 //    glColor3f(0.0f, 0.0f, 0.0f);
 //    glBegin(GL_POLYGON);                        // Middle circle
@@ -272,11 +273,51 @@ void drawHoleCircle(double x, double y, double z, double radius, double lightPos
 
 
 
-//    glColor3ub(red, green, blue);
+    glColor3ub(0, 0, 0);
     glPushMatrix();
     glTranslated(x, y, z);
     glutSolidSphere(radius, 50, 50);
     glPopMatrix();
+
+}
+
+const GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
+const GLfloat light_diffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
+const GLfloat light_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+const GLfloat light_position[] = { 2.0f, 5.0f, 5.0f, 0.0f };
+const GLfloat mat_ambient[]    = { 0.7f, 0.7f, 0.7f, 1.0f };
+const GLfloat mat_diffuse[]    = { 0.8f, 0.8f, 0.8f, 1.0f };
+const GLfloat mat_specular[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
+const GLfloat high_shininess[] = { 100.0f };
+
+void drawBall(int red, int green, int blue, double x, double y) {
+    glCullFace(GL_BACK);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    glEnable(GL_LIGHT0);
+    glEnable(GL_NORMALIZE);
+    glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_LIGHTING);
+
+    glLightfv(GL_LIGHT0, GL_AMBIENT,  light_ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE,  light_diffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
+    glMaterialfv(GL_FRONT, GL_AMBIENT,   mat_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE,   mat_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR,  mat_specular);
+    glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
+
+    glColor3ub(red,green,blue);
+
+    glPushMatrix();
+    glTranslated(x,y,0);
+    glutSolidSphere(20,50,50);
+    glPopMatrix();
+
 }
 
 void draw() {
@@ -307,6 +348,8 @@ void draw() {
     // drawing holes
     // x += 15, y += 15
 
+
+
     // down leftmost hole
     drawHoleCircle(68, 79, 0, 26, -0.6);
     // down rightmost hole
@@ -319,6 +362,40 @@ void draw() {
     drawHoleCircle(930, 721, 0, 26, 0.4);
     // up mid-hole
     drawHoleCircle(500, 721, 0, 26, 0.0);
+
+    // 15
+    drawBall(18, 135, 57, 800, 480);
+    // 14
+    drawBall(155, 97, 77, 800, 440);
+    // 13
+    drawBall(244, 122, 66, 800, 400);
+    // 12
+    drawBall(128, 68, 133, 800, 360);
+    // 11
+    drawBall(223, 39, 40, 800, 320);
+    // 10
+    drawBall(42, 57, 132, 765, 460);
+    // 09
+    drawBall(255, 196, 55, 765, 420);
+    // 08
+    drawBall(52, 60, 54, 730, 400);
+    // 07
+    drawBall(4, 159, 72, 765, 380);
+    // 06
+    drawBall(144, 96, 66, 765, 340);
+    // 05
+    drawBall(241, 121, 38, 730, 440);
+    // 04
+    drawBall(139, 73, 133, 730, 360);
+    // 03
+    drawBall(241, 32, 53, 695, 420);
+    // 02
+    drawBall(37, 57, 114, 695, 380);
+    // 01
+    drawBall(251, 199, 54, 660, 400);
+    // White ball
+    drawBall(255, 255, 255, 300, 400);
+
 
     glutSwapBuffers();
 }
