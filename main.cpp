@@ -11,19 +11,6 @@ bool mouseClick = false;
 GLfloat lineX1, lineY1, lineX2, lineY2;
 
 void drawTable() {
-//    glColor3f(0.0f, 0.0f, 0.0f);
-//    glBegin(GL_POLYGON);                        // Middle circle
-//    double ballRect = 22;
-//    double ori_x = 70.0;                         // the origin or center of circle
-//    double ori_y = 716.0;
-//    for (int i = 0; i <= 300; i++) {
-//        double angle = 2 * PI * i / 300;
-//        double x = cos(angle) * ballRect;
-//        double y = sin(angle) * ballRect;
-//        glVertex2d(ori_x + x, ori_y + y);
-//    }
-//    glEnd();
-
     // ==== CORNERS
     // top left corner
     glColor3ub(159, 104, 40);
@@ -43,22 +30,22 @@ void drawTable() {
     glVertex2f(70.0f, 0.0f);
     glEnd();
 
-    // mid up corner (maybe)
+    // mid up corner
     glColor3ub(159, 104, 40);
     glBegin(GL_POLYGON);
-    glVertex2f(470.0f, 716.0f);
-    glVertex2f(470.0f, 800.0f);
-    glVertex2f(530.0f, 800.0f);
-    glVertex2f(530.0f, 716.0f);
+    glVertex2f(460.0f, 711.0f);
+    glVertex2f(460.0f, 800.0f);
+    glVertex2f(540.0f, 800.0f);
+    glVertex2f(540.0f, 711.0f);
     glEnd();
 
     // mid down corner (maybe)
     glColor3ub(159, 104, 40);
     glBegin(GL_POLYGON);
-    glVertex2f(470.0f, 0.0f);
-    glVertex2f(470.0f, 84.0f);
-    glVertex2f(530.0f, 84.0f);
-    glVertex2f(530.0f, 0.0f);
+    glVertex2f(460.0f, 0.0f);
+    glVertex2f(460.0f, 89.0f);
+    glVertex2f(540.0f, 89.0f);
+    glVertex2f(540.0f, 0.0f);
     glEnd();
 
     // down right corner
@@ -126,20 +113,20 @@ void drawTable() {
 
     // UP LEFT
     // ====
-    // mid up left green border
+    // up left green border
     glColor3ub(13, 137, 67);
     glBegin(GL_POLYGON);
     glVertex2f(70.0f, 756.0f);
     glVertex2f(470.0f, 756.0f);
-    glVertex2f(440.0f, 716.0f);
+    glVertex2f(460.0f, 716.0f);
     glVertex2f(100.0f, 716.0f);
     glEnd();
-    // mid up left green stoke
+    // up left green stoke
     glColor3ub(23, 60, 26);
     glBegin(GL_POLYGON);
     glVertex2f(100.0f, 711.0f);
-    glVertex2f(440.0f, 711.0f);
-    glVertex2f(440.0f, 716.0f);
+    glVertex2f(460.0f, 711.0f);
+    glVertex2f(460.0f, 716.0f);
     glVertex2f(100.0f, 716.0f);
     glEnd();
     // ====
@@ -152,15 +139,15 @@ void drawTable() {
     glVertex2f(530.0f, 756.0f);
     glVertex2f(930.0f, 756.0f);
     glVertex2f(900.0f, 716.0f);
-    glVertex2f(560.0f, 716.0f);
+    glVertex2f(540.0f, 716.0f);
     glEnd();
     // up right green stoke
     glColor3ub(23, 60, 26);
     glBegin(GL_POLYGON);
-    glVertex2f(560.0f, 711.0f);
+    glVertex2f(540.0f, 711.0f);
     glVertex2f(900.0f, 711.0f);
     glVertex2f(900.0f, 716.0f);
-    glVertex2f(560.0f, 716.0f);
+    glVertex2f(540.0f, 716.0f);
     glEnd();
     // ====
 
@@ -171,7 +158,7 @@ void drawTable() {
     glBegin(GL_POLYGON);
     glVertex2f(70.0f, 44.0f);
     glVertex2f(100.0f, 84.0f);
-    glVertex2f(440.0f, 84.0f);
+    glVertex2f(460.0f, 84.0f);
     glVertex2f(470.0f, 44.0f);
     glEnd();
 
@@ -180,41 +167,30 @@ void drawTable() {
     glBegin(GL_POLYGON);
     glVertex2f(100.0f, 84.0f);
     glVertex2f(100.0f, 89.0f);
-    glVertex2f(440.0f, 89.0f);
-    glVertex2f(440.0f, 84.0f);
+    glVertex2f(460.0f, 89.0f);
+    glVertex2f(460.0f, 84.0f);
     glEnd();
     // ====
 
     // DOWN RIGHT
     // ====
-    // mid down right green border
+    // down right green border
     glColor3ub(13, 137, 67);
     glBegin(GL_POLYGON);
     glVertex2f(530.0f, 44.0f);
-    glVertex2f(560.0f, 84.0f);
+    glVertex2f(540.0f, 84.0f);
     glVertex2f(900.0f, 84.0f);
     glVertex2f(930.0f, 44.0f);
     glEnd();
-    // mid down right green stroke
+    // down right green stroke
     glColor3ub(23, 60, 26);
     glBegin(GL_POLYGON);
-    glVertex2f(560.0f, 84.0f);
-    glVertex2f(560.0f, 89.0f);
+    glVertex2f(540.0f, 84.0f);
+    glVertex2f(540.0f, 89.0f);
     glVertex2f(900.0f, 89.0f);
     glVertex2f(900.0f, 84.0f);
     glEnd();
     // ====
-
-
-
-
-
-
-
-
-
-
-
 
 
     // table mid
@@ -240,17 +216,17 @@ void init() {
     glOrtho(0.0, WIDTH, 0.0, HEIGHT, -100.0, 100.0);
 
     // down leftmost hole
-    holes[0] = new Hole(78, 89, -0.6);
+    holes[0] = new Hole(73, 79, -0.6);
     // down rightmost hole
-    holes[1] = new Hole(920, 89, 0.6);
+    holes[1] = new Hole(925, 79, 0.6);
     // down mid-hole
     holes[2] = new Hole(500, 79, 0.0);
     // up leftmost hole
-    holes[3] = new Hole(78, 711, -0.4);
+    holes[3] = new Hole(73, 721, -0.4);
     // up rightmost hole
-    holes[4] = new Hole(920, 711, 0.4);
+    holes[4] = new Hole(925, 721, 0.4);
     // up mid-hole
-    holes[5] = new Hole(500, 711, 0.0);
+    holes[5] = new Hole(500, 721, 0.0);
 
     // 15
     balls[15] = new Ball(802, 484, 18, 135, 57, 0, 15);
@@ -493,7 +469,6 @@ void mouseEvent(int button, int state, int mouseX, int mouseY) {
 void mouseMove(int x, int y) {
 
     if (mouseClick) {
-        cout << "Hello World" << '\n';
         y = HEIGHT - y;
         lineX2 = x;
         lineY2 = y;

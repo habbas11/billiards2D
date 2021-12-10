@@ -101,7 +101,8 @@ public:
 
     void checkTableBorder() {
         // left border
-        if (((x - ballRadius) <= 70) && (y >= 104 && y <= 676)) {
+        if (((x - ballRadius) <= 70) && (y >= 104 && y <= 696)) {
+            cerr << "Ball " << id << " touched left border" << '\n';
             ballRect = 180 - ballRect;
             if (ballRect < 0)
                 ballRect += 360;
@@ -110,7 +111,8 @@ public:
         }
 
         // right border
-        if (((x + ballRadius) >= 925) && (y >= 104 && y <= 676)) {
+        if (((x + ballRadius) >= 925) && (y >= 104 && y <= 696)) {
+            cerr << "Ball " << id << " touched right border" << '\n';
             ballRect = 180 - ballRect;
             if (ballRect < 0)
                 ballRect += 360;
@@ -119,7 +121,8 @@ public:
         }
 
         // down left border
-        if ((x >= 100 && x <= 440) && ((y - ballRadius) <= 89)) {
+        if ((x >= 100 && x <= 460) && ((y - ballRadius) <= 89)) {
+            cerr << "Ball " << id << " touched down left border" << '\n';
             ballRect = 360 - ballRect;
             if (ballRect < 0)
                 ballRect += 360;
@@ -128,7 +131,8 @@ public:
         }
 
         // down right border
-        if ((x >= 560 && x <= 900) && ((y - ballRadius) <= 89)) {
+        if ((x >= 540 && x <= 900) && ((y - ballRadius) <= 89)) {
+            cerr << "Ball " << id << " touched down right border" << '\n';
             ballRect = 360 - ballRect;
             if (ballRect < 0)
                 ballRect += 360;
@@ -137,20 +141,22 @@ public:
         }
 
         // up left border
-        if ((x >= 100 && x <= 440) && ((y + ballRadius) >= 716)) {
+        if ((x >= 100 && x <= 460) && ((y + ballRadius) >= 711)) {
+            cerr << "Ball " << id << " touched up left border" << '\n';
             ballRect = 360 - ballRect;
             if (ballRect < 0)
                 ballRect += 360;
-            y = 716 - ballRadius;
+            y = 711 - ballRadius;
             speed *= 0.55;
         }
 
         // up right border
-        if ((x >= 560 && x <= 900) && ((y + ballRadius) >= 716)) {
+        if ((x >= 540 && x <= 900) && ((y + ballRadius) >= 711)) {
+            cerr << "Ball " << id << " touched up right border" << '\n';
             ballRect = 360 - ballRect;
             if (ballRect < 0)
                 ballRect += 360;
-            y = 716 - ballRadius;
+            y = 711 - ballRadius;
             speed *= 0.55;
         }
     }
@@ -164,7 +170,7 @@ public:
 
         if (collide(targetBall)) {
 
-            cout << "Balls " << id << " and " << targetBall.id << " collide." << '\n';
+            cout << "Balls " << id << " and " << targetBall.id << " collided." << '\n';
             double dist = sqrt(((x - targetBall.x) * (x - targetBall.x)) + ((y - targetBall.y) * (y - targetBall.y)));
             double overLap = 0.5 * (dist - (2 * ballRadius));
 
