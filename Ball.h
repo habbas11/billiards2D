@@ -34,12 +34,16 @@ const GLfloat high_shininess[] = {100.0f};
 class Ball {
 
 public:
+    // position vector
     double x, y;
+    // velocity vector
+    double vX, vY;
+    // acceleration vector
+    double aX, aY;
+    double radius;
     double red, green, blue;
     double speed;
     double mass;
-    double vX{};
-    double vY{};
     double ballRect;
     double frictionForce;
     int id;
@@ -52,6 +56,9 @@ public:
         this->blue = blue;
         this->ballRect = rect;
         this->speed = 0;
+        this->vX = 0, this->vY = 0;
+        this->aX = 0, this->aY = 0;
+        this->radius = ballRadius;
         // The pool table has a coefficient of friction of 0.005 at any point on the table
         this->frictionForce = 0.005;
         this->id = id;
@@ -59,7 +66,6 @@ public:
     }
 
     void move() {
-
         if (speed > (frictionForce * gravity)) {
             speed -= frictionForce * gravity;
             x += cos((ballRect * PI) / 180.0) * speed;
@@ -166,65 +172,24 @@ public:
             y -= overLap * (y - targetBall.y) / dist;
             targetBall.x += overLap * (x - targetBall.x) / dist;
             targetBall.y += overLap * (y - targetBall.y) / dist;
-
-            double nX = (x - targetBall.x) / dist;
-            double nY = (y - targetBall.y) / dist;
-
-            double tX = -nY;
-            double tY = nX;
-
-            double dpTan1 = vX * tX + vY * tY;
-            double dpTan2 = targetBall.vX * tX + targetBall.vY * tY;
-
-            double dpNorm1 = vX * nX + vY * nY;
-            double dpNorm2 = targetBall.vX * nX + targetBall.vY * nY;
-
-            double m1 = (dpNorm1 * (mass - targetBall.mass) + 2 * targetBall.mass * dpNorm2) / (mass + targetBall.mass);
-            double m2 = (dpNorm2 * (targetBall.mass - mass) + 2 * mass * dpNorm1) / (mass + targetBall.mass);
-
-            vX = tX * dpTan1 + nX * m1;
-            vY = tY * dpTan1 + nY * m1;
+            double rect = atan2(y- targetBall.y, x - targetBall.x);
+            rect *= 180;
+            rect /= PI;
 
 
-            targetBall.vX = tX * dpTan2 + nX * m2;
-            targetBall.vY = tY * dpTan2 + nY * m2;
+            double bx1, by1, bx2, by2;
 
+            bx1 = cos(((ballRect - rect) * PI) / 180.0) * speed;
+            by1 = sin(((ballRect - rect) * PI) / 180.0) * speed;
+            bx2 = cos(((targetBall.ballRect - rect) * PI) / 180.0) * targetBall.speed;
+            by2 = sin(((targetBall.ballRect - rect) * PI) / 180.0) * targetBall.speed;
 
+            speed = sqrt(pow(bx2, 2) + pow(by1, 2));
+            targetBall.speed = sqrt(pow(bx1, 2) + pow(by2, 2));
+
+            ballRect = rect + (atan2(by1, bx2) * 180 / PI);
+            targetBall.ballRect = rect + (atan2(by2, bx1) * 180 / PI);
         }
-
-
-
-//
-//        double firstBallMovementOnX = (x + ((cos((ballRect * PI) / 180.0)) * speed));
-//        double secondBallMovementOnX = (targetBall.x + ((cos((targetBall.ballRect * PI) / 180.0)) * targetBall.speed));
-//        double movementOnX = firstBallMovementOnX - secondBallMovementOnX;
-//
-//        double firstBallMovementOnY = (y + sin((ballRect * PI) / 180.0) * speed);
-//        double secondBallMovementOnY = (targetBall.y + sin((targetBall.ballRect * PI) / 180.0) * targetBall.speed);
-//        double movementOnY = firstBallMovementOnY - secondBallMovementOnY;
-//
-//        if (((movementOnX * movementOnX) + (movementOnY * movementOnY)) <= ((ballRadius * 2) * (ballRadius * 2))) {
-//            double rect = atan2(y - targetBall.y, x - targetBall.x);
-//            rect *= 180;
-//            rect /= PI;
-//
-//            speed *= 0.55;
-//            targetBall.speed *= 0.55;
-//
-//            double bx1, by1, bx2, by2;
-//
-//            bx1 = cos(((ballRect - rect) * PI) / 180.0) * speed;
-//            by1 = sin(((ballRect - rect) * PI) / 180.0) * speed;
-//            bx2 = cos(((targetBall.ballRect - rect) * PI) / 180.0) * targetBall.speed;
-//            by2 = sin(((targetBall.ballRect - rect) * PI) / 180.0) * targetBall.speed;
-//
-//            speed = sqrt(pow(bx2, 2) + pow(by1, 2));
-//            targetBall.speed = sqrt(pow(bx1, 2) + pow(by2, 2));
-//
-//            ballRect = rect + (atan2(by1, bx2) * 180 / PI);
-//            targetBall.ballRect = rect + (atan2(by2, bx1) * 180 / PI);
-//        }
-
     }
 
     void drawBall() const {

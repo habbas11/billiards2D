@@ -475,19 +475,13 @@ void mouseEvent(int button, int state, int mouseX, int mouseY) {
                 }
             }
             if (state == GLUT_UP) {
-
-                balls[0]->vX = 5 * balls[0]->x - mouseX;
-                balls[0]->vY = 5 * balls[0]->y - mouseY;
-
                 cerr << "Un-press" << '\n';
                 mouseClick = false;
                 printf("%f %f\n", lineX1 - lineX2, lineY1 - lineY2);
                 printf("%lf\n", atan2(double(lineY1 - lineY2), double(lineX1 - lineX2)) * 180 / PI);
                 balls[0]->ballRect = atan2(double(lineY1 - lineY2), double(lineX1 - lineX2)) * 180 / PI;
-                //atan2를 이용하여 공이 날아갈 각도를 계산해준다.
 
                 balls[0]->speed = sqrt(pow(lineX1 - lineX2, 2.0) + pow(lineY1 - lineY2, 2.0)) / 20;
-                //흰공의 속도는 나누기 20을 해줌으로써 적당히 할당해준다.
 
                 lineX1 = lineY1 = lineX2 = lineY2 = 0;
 
@@ -496,9 +490,8 @@ void mouseEvent(int button, int state, int mouseX, int mouseY) {
 
 }
 
-void mousemove(int x, int y) {
+void mouseMove(int x, int y) {
 
-    //마우스 왼쪽이 눌려져있다면
     if (mouseClick) {
         cout << "Hello World" << '\n';
         y = HEIGHT - y;
@@ -530,7 +523,7 @@ int main(int argc, char **argv) {
     glutInit(&argc, argv);
     init();
     glutMouseFunc(mouseEvent);
-    glutMotionFunc(mousemove);
+    glutMotionFunc(mouseMove);
     glutDisplayFunc(draw);
     glutTimerFunc(1, timer, 1);
     glutMainLoop();
