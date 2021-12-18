@@ -22,6 +22,8 @@ const int WIDTH = 1000;
 const double EPS = 1e-18;
 const double ballRadius = 20;
 const double gravity = 9.81;
+
+// Lights and mat properties for the spheres
 const GLfloat light_ambient[] = {0.0f, 0.0f, 0.0f, 1.0f};
 const GLfloat light_diffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
 const GLfloat light_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -31,174 +33,41 @@ const GLfloat mat_diffuse[] = {0.8f, 0.8f, 0.8f, 1.0f};
 const GLfloat mat_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
 const GLfloat high_shininess[] = {100.0f};
 
+// The number of balls at the beginning
+int remainingBalls = 16;
+
 class Ball {
 
 public:
+
+    // All the properties that are needed for controlling the balls
+
     // position vector
     double x, y;
-    // velocity vector
-    double vX, vY;
-    // acceleration vector
-    double aX, aY;
     double radius;
     double red, green, blue;
     double speed;
-    double mass;
+    // The line which the ball will follow when it has speed
     double ballRect;
+    // The friction force caused by moving on the table
     double frictionForce;
+    // The number of the ball
     int id;
 
+    // The constructor
     Ball(double x, double y, double red, double green, double blue, double rect, int id) {
-        this->x = x;
-        this->y = y;
+        this->x = x, this->y = y;
         this->red = red;
-        this->green = green;
-        this->blue = blue;
-        this->ballRect = rect;
+        this->green = green, this->blue = blue, this->ballRect = rect;
         this->speed = 0;
-        this->vX = 0, this->vY = 0;
-        this->aX = 0, this->aY = 0;
         this->radius = ballRadius;
         // The pool table has a coefficient of friction of 0.005 at any point on the table
         this->frictionForce = 0.005;
         this->id = id;
-        this->mass = 20;
-    }
-
-    void move() {
-        if (speed > (frictionForce * gravity)) {
-            speed -= frictionForce * gravity;
-            x += cos((ballRect * PI) / 180.0) * speed;
-            y += sin((ballRect * PI) / 180.0) * speed;
-        } else
-            speed = 0;
-    }
-
-    // Check if getting inside a hole
-    void checkHole() {
-        for (auto &hole: holes) {
-            double distOnX = hole->x - x;
-            double distOnY = hole->y - y;
-            if (((distOnX * distOnX) + (distOnY * distOnY)) <= (ballRadius + holeRadius) * (ballRadius + holeRadius)) {
-                cerr << "====== Got inside a hole ======" << '\n';
-                PlaySound(TEXT("C:\\Users\\User\\CLionProjects\\billiards2D\\falling.wav"), nullptr,
-                          SND_FILENAME | SND_ASYNC);
-                // If a white Ball
-                if (red == 255 && green == 255 && blue == 255) {
-                    cerr << "====== White Ball got inside a hole ======" << '\n';
-                    x = hole->x;
-                    y = hole->y;
-                    x = 300;
-                    y = 400;
-                    speed = 0;
-                } else {
-                    x = -20, y = -20;
-                    speed = 0;
-                }
-            }
-        }
-    }
-
-    void checkTableBorder() {
-        // left border
-        if (((x - ballRadius) <= 70) && (y >= 104 && y <= 696)) {
-            cerr << "Ball " << id << " touched left border" << '\n';
-            ballRect = 180 - ballRect;
-            if (ballRect < 0)
-                ballRect += 360;
-            x = 70 + ballRadius;
-            speed *= 0.55;
-        }
-
-        // right border
-        if (((x + ballRadius) >= 925) && (y >= 104 && y <= 696)) {
-            cerr << "Ball " << id << " touched right border" << '\n';
-            ballRect = 180 - ballRect;
-            if (ballRect < 0)
-                ballRect += 360;
-            x = 925 - ballRadius;
-            speed *= 0.55;
-        }
-
-        // down left border
-        if ((x >= 100 && x <= 460) && ((y - ballRadius) <= 89)) {
-            cerr << "Ball " << id << " touched down left border" << '\n';
-            ballRect = 360 - ballRect;
-            if (ballRect < 0)
-                ballRect += 360;
-            y = 90 + ballRadius;
-            speed *= 0.55;
-        }
-
-        // down right border
-        if ((x >= 540 && x <= 900) && ((y - ballRadius) <= 89)) {
-            cerr << "Ball " << id << " touched down right border" << '\n';
-            ballRect = 360 - ballRect;
-            if (ballRect < 0)
-                ballRect += 360;
-            y = 90 + ballRadius;
-            speed *= 0.55;
-        }
-
-        // up left border
-        if ((x >= 100 && x <= 460) && ((y + ballRadius) >= 711)) {
-            cerr << "Ball " << id << " touched up left border" << '\n';
-            ballRect = 360 - ballRect;
-            if (ballRect < 0)
-                ballRect += 360;
-            y = 711 - ballRadius;
-            speed *= 0.55;
-        }
-
-        // up right border
-        if ((x >= 540 && x <= 900) && ((y + ballRadius) >= 711)) {
-            cerr << "Ball " << id << " touched up right border" << '\n';
-            ballRect = 360 - ballRect;
-            if (ballRect < 0)
-                ballRect += 360;
-            y = 711 - ballRadius;
-            speed *= 0.55;
-        }
-    }
-
-    bool collide(Ball &targetBall) const {
-        return fabs(((x - targetBall.x) * (x - targetBall.x)) + ((y - targetBall.y) * (y - targetBall.y))) <=
-               ((2 * ballRadius) * (2 * ballRadius));
-    }
-
-    void collision(Ball &targetBall) {
-
-        if (collide(targetBall)) {
-
-            cout << "Balls " << id << " and " << targetBall.id << " collided." << '\n';
-            double dist = sqrt(((x - targetBall.x) * (x - targetBall.x)) + ((y - targetBall.y) * (y - targetBall.y)));
-            double overLap = 0.5 * (dist - (2 * ballRadius));
-
-            x -= overLap * (x - targetBall.x) / dist;
-            y -= overLap * (y - targetBall.y) / dist;
-            targetBall.x += overLap * (x - targetBall.x) / dist;
-            targetBall.y += overLap * (y - targetBall.y) / dist;
-            double rect = atan2(y- targetBall.y, x - targetBall.x);
-            rect *= 180;
-            rect /= PI;
-
-
-            double bx1, by1, bx2, by2;
-
-            bx1 = cos(((ballRect - rect) * PI) / 180.0) * speed;
-            by1 = sin(((ballRect - rect) * PI) / 180.0) * speed;
-            bx2 = cos(((targetBall.ballRect - rect) * PI) / 180.0) * targetBall.speed;
-            by2 = sin(((targetBall.ballRect - rect) * PI) / 180.0) * targetBall.speed;
-
-            speed = sqrt(pow(bx2, 2) + pow(by1, 2));
-            targetBall.speed = sqrt(pow(bx1, 2) + pow(by2, 2));
-
-            ballRect = rect + (atan2(by1, bx2) * 180 / PI);
-            targetBall.ballRect = rect + (atan2(by2, bx1) * 180 / PI);
-        }
     }
 
     void drawBall() const {
+        // Specifying the lighting properties
         glCullFace(GL_BACK);
 
         glEnable(GL_DEPTH_TEST);
@@ -219,16 +88,170 @@ public:
         glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
         glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
 
+        // Giving a specific color for the ball
         glColor3ub((GLubyte) red, (GLubyte) green, (GLubyte) blue);
 
+        // Drawing
         glPushMatrix();
         glTranslated(x, y, 0);
-        glutSolidSphere(ballRadius, 50, 50);
+        glutSolidSphere(this->radius, 60, 20);
         glPopMatrix();
-
     }
+
+    // Moving the ball when there is no collision
+    void move() {
+        // The ball will be affected by the friction of the table and the gravity
+        if (speed > (frictionForce * gravity)) {
+            speed -= frictionForce * gravity;
+            x += cos((ballRect * PI) / 180.0) * speed;
+            y += sin((ballRect * PI) / 180.0) * speed;
+        } else
+            speed = 0;
+    }
+
+    // Checking if the ball got inside a hole
+    void checkHole() {
+        // Looping throw all the 6 holes
+        for (auto &hole: holes) {
+            // Applying the formula of distance between two circles
+            double distOnX = hole->x - x;
+            double distOnY = hole->y - y;
+
+            // If the two circles touch...
+            if (((distOnX * distOnX) + (distOnY * distOnY)) <= (ballRadius + holeRadius) * (ballRadius + holeRadius)) {
+                cout << "====== Ball " << id << " got inside a hole ======" << '\n';
+                // Playing a sound (Might not work if not running in debug mode)
+                PlaySound(TEXT("C:\\Users\\User\\CLionProjects\\billiards2D\\falling.wav"), nullptr,
+                          SND_FILENAME | SND_ASYNC);
+
+                // If a white Ball
+                if (red == 255 && green == 255 && blue == 255) {
+                    cout << "====== White Ball got inside a hole ======" << '\n';
+                    x = hole->x;
+                    y = hole->y;
+                    x = 300;
+                    y = 400;
+                    speed = 0;
+                }
+                    // If not a white ball, get it out of the viewing range, and stop it
+                else {
+                    x = -20, y = -20;
+                    speed = 0;
+                    --remainingBalls;
+                }
+            }
+        }
+    }
+
+    // Checking if a ball hits any of the table borders, and if so reduce its speed
+    void checkTableBorder() {
+        // left border
+        if (((x - ballRadius) <= 70) && (y >= 104 && y <= 696)) {
+            cout << "Ball " << id << " touched left border" << '\n';
+            ballRect = 180 - ballRect;
+            if (ballRect < 0)
+                ballRect += 360;
+            x = 70 + ballRadius;
+            speed *= 0.55;
+        }
+
+        // right border
+        if (((x + ballRadius) >= 925) && (y >= 104 && y <= 696)) {
+            cout << "Ball " << id << " touched right border" << '\n';
+            ballRect = 180 - ballRect;
+            if (ballRect < 0)
+                ballRect += 360;
+            x = 925 - ballRadius;
+            speed *= 0.55;
+        }
+
+        // down left border
+        if ((x >= 100 && x <= 460) && ((y - ballRadius) <= 89)) {
+            cout << "Ball " << id << " touched down left border" << '\n';
+            ballRect = 360 - ballRect;
+            if (ballRect < 0)
+                ballRect += 360;
+            y = 90 + ballRadius;
+            speed *= 0.55;
+        }
+
+        // down right border
+        if ((x >= 540 && x <= 900) && ((y - ballRadius) <= 89)) {
+            cout << "Ball " << id << " touched down right border" << '\n';
+            ballRect = 360 - ballRect;
+            if (ballRect < 0)
+                ballRect += 360;
+            y = 90 + ballRadius;
+            speed *= 0.55;
+        }
+
+        // up left border
+        if ((x >= 100 && x <= 460) && ((y + ballRadius) >= 711)) {
+            cout << "Ball " << id << " touched up left border" << '\n';
+            ballRect = 360 - ballRect;
+            if (ballRect < 0)
+                ballRect += 360;
+            y = 711 - ballRadius;
+            speed *= 0.55;
+        }
+
+        // up right border
+        if ((x >= 540 && x <= 900) && ((y + ballRadius) >= 711)) {
+            cout << "Ball " << id << " touched up right border" << '\n';
+            ballRect = 360 - ballRect;
+            if (ballRect < 0)
+                ballRect += 360;
+            y = 711 - ballRadius;
+            speed *= 0.55;
+        }
+    }
+
+    // For checking if two ball collide
+    bool collide(Ball &targetBall) const {
+        return fabs(((x - targetBall.x) * (x - targetBall.x)) + ((y - targetBall.y) * (y - targetBall.y))) <=
+               ((2 * ballRadius) * (2 * ballRadius));
+    }
+
+    // The event to be taken when two balls collide
+    void collision(Ball &targetBall) {
+        if (collide(targetBall)) {
+            cout << "Balls " << id << " and " << targetBall.id << " collided." << '\n';
+
+            double dist = sqrt(((x - targetBall.x) * (x - targetBall.x)) + ((y - targetBall.y) * (y - targetBall.y)));
+            double overLap = 0.5 * (dist - (2 * ballRadius));
+
+            x -= overLap * (x - targetBall.x) / dist;
+            y -= overLap * (y - targetBall.y) / dist;
+
+            targetBall.x += overLap * (x - targetBall.x) / dist;
+            targetBall.y += overLap * (y - targetBall.y) / dist;
+
+            double rect = atan2(y - targetBall.y, x - targetBall.x);
+            rect *= 180;
+            rect /= PI;
+
+
+            double firstBallX, firstBallY, targetBallX, targetBallY;
+
+            firstBallX = cos(((ballRect - rect) * PI) / 180.0) * speed;
+            firstBallY = sin(((ballRect - rect) * PI) / 180.0) * speed;
+
+            targetBallX = cos(((targetBall.ballRect - rect) * PI) / 180.0) * targetBall.speed;
+            targetBallY = sin(((targetBall.ballRect - rect) * PI) / 180.0) * targetBall.speed;
+
+            // Adjusting the speed of the two balls
+            speed = sqrt(pow(targetBallX, 2) + pow(firstBallY, 2));
+            targetBall.speed = sqrt(pow(firstBallX, 2) + pow(targetBallY, 2));
+
+            // Adjusting the rect of the two balls
+            ballRect = rect + (atan2(firstBallY, targetBallX) * 180 / PI);
+            targetBall.ballRect = rect + (atan2(targetBallY, firstBallX) * 180 / PI);
+        }
+    }
+
 };
 
+// The array of balls we'll use
 Ball *balls[16];
 
 

@@ -1,220 +1,42 @@
+/*
+ * SVU - ITE - BCG601 - S21
+ * Dr.Samer Jamal
+ *
+ * Participants:
+ *  omar_116205
+ *  omar_108591
+ *  mhd_hussam_109817
+ *
+ * */
+
 #include <GL/glut.h>
 #include <cmath>
 #include <iostream>
 #include <vector>
 #include "Hole.h"
 #include "Ball.h"
+#include "Table.h"
+#include "Stick.h"
 
 using namespace std;
 
-bool mouseClick = false;
-GLfloat lineX1, lineY1, lineX2, lineY2;
-
-void drawTable() {
-    // ==== CORNERS
-    // top left corner
-    glColor3ub(159, 104, 40);
-    glBegin(GL_POLYGON);
-    glVertex2f(0.0f, 716.0f);
-    glVertex2f(0.0f, 800.0f);
-    glVertex2f(70.0f, 800.0f);
-    glVertex2f(70.0f, 716.0f);
-    glEnd();
-
-    // down left corner
-    glColor3ub(159, 104, 40);
-    glBegin(GL_POLYGON);
-    glVertex2f(0.0f, 0.0f);
-    glVertex2f(0.0f, 84.0f);
-    glVertex2f(70.0f, 84.0f);
-    glVertex2f(70.0f, 0.0f);
-    glEnd();
-
-    // mid up corner
-    glColor3ub(159, 104, 40);
-    glBegin(GL_POLYGON);
-    glVertex2f(460.0f, 711.0f);
-    glVertex2f(460.0f, 800.0f);
-    glVertex2f(540.0f, 800.0f);
-    glVertex2f(540.0f, 711.0f);
-    glEnd();
-
-    // mid down corner (maybe)
-    glColor3ub(159, 104, 40);
-    glBegin(GL_POLYGON);
-    glVertex2f(460.0f, 0.0f);
-    glVertex2f(460.0f, 89.0f);
-    glVertex2f(540.0f, 89.0f);
-    glVertex2f(540.0f, 0.0f);
-    glEnd();
-
-    // down right corner
-    glColor3ub(159, 104, 40);
-    glBegin(GL_POLYGON);
-    glVertex2f(930.0f, 0.0f);
-    glVertex2f(930.0f, 84.0f);
-    glVertex2f(1000.0f, 84.0f);
-    glVertex2f(1000.0f, 0.0f);
-    glEnd();
-
-    // up right corner
-    glColor3ub(159, 104, 40);
-    glBegin(GL_POLYGON);
-    glVertex2f(930.0f, 716.0f);
-    glVertex2f(930.0f, 800.0f);
-    glVertex2f(1000.0f, 800.0f);
-    glVertex2f(1000.0f, 716.0f);
-    glEnd();
-
-
-    // === BORDERS
-
-    // LEFT
-    // ====
-    // left green border
-    glColor3ub(13, 137, 67);
-    glBegin(GL_POLYGON);
-    glVertex2f(40.0f, 74.0f);
-    glVertex2f(40.0f, 726.0f);
-    glVertex2f(70.0f, 696.0f);
-    glVertex2f(70.0f, 104.0f);
-    glEnd();
-
-    // left green stroke
-    glColor3ub(23, 60, 26);
-    glBegin(GL_POLYGON);
-    glVertex2f(70.0f, 104.0f);
-    glVertex2f(70.0f, 696.0f);
-    glVertex2f(75.0f, 696.0f);
-    glVertex2f(75.0f, 104.0f);
-    glEnd();
-    // ====
-
-    // RIGHT
-    // ====
-    // right green border
-    glColor3ub(13, 137, 67);
-    glBegin(GL_POLYGON);
-    glVertex2f(960.0f, 74.0f);
-    glVertex2f(960.0f, 726.0f);
-    glVertex2f(930.0f, 696.0f);
-    glVertex2f(930.0f, 104.0f);
-    glEnd();
-
-    // right green stroke
-    glColor3ub(23, 60, 26);
-    glBegin(GL_POLYGON);
-    glVertex2f(930.0f, 104.0f);
-    glVertex2f(930.0f, 696.0f);
-    glVertex2f(925.0f, 696.0f);
-    glVertex2f(925.0f, 104.0f);
-    glEnd();
-    // ====
-
-    // UP LEFT
-    // ====
-    // up left green border
-    glColor3ub(13, 137, 67);
-    glBegin(GL_POLYGON);
-    glVertex2f(70.0f, 756.0f);
-    glVertex2f(470.0f, 756.0f);
-    glVertex2f(460.0f, 716.0f);
-    glVertex2f(100.0f, 716.0f);
-    glEnd();
-    // up left green stoke
-    glColor3ub(23, 60, 26);
-    glBegin(GL_POLYGON);
-    glVertex2f(100.0f, 711.0f);
-    glVertex2f(460.0f, 711.0f);
-    glVertex2f(460.0f, 716.0f);
-    glVertex2f(100.0f, 716.0f);
-    glEnd();
-    // ====
-
-    // UP RIGHT
-    // ====
-    // up right green border
-    glColor3ub(13, 137, 67);
-    glBegin(GL_POLYGON);
-    glVertex2f(530.0f, 756.0f);
-    glVertex2f(930.0f, 756.0f);
-    glVertex2f(900.0f, 716.0f);
-    glVertex2f(540.0f, 716.0f);
-    glEnd();
-    // up right green stoke
-    glColor3ub(23, 60, 26);
-    glBegin(GL_POLYGON);
-    glVertex2f(540.0f, 711.0f);
-    glVertex2f(900.0f, 711.0f);
-    glVertex2f(900.0f, 716.0f);
-    glVertex2f(540.0f, 716.0f);
-    glEnd();
-    // ====
-
-    // DOWN LEFT
-    // ====
-    // down left green border
-    glColor3ub(13, 137, 67);
-    glBegin(GL_POLYGON);
-    glVertex2f(70.0f, 44.0f);
-    glVertex2f(100.0f, 84.0f);
-    glVertex2f(460.0f, 84.0f);
-    glVertex2f(470.0f, 44.0f);
-    glEnd();
-
-    // down left green stroke
-    glColor3ub(23, 60, 26);
-    glBegin(GL_POLYGON);
-    glVertex2f(100.0f, 84.0f);
-    glVertex2f(100.0f, 89.0f);
-    glVertex2f(460.0f, 89.0f);
-    glVertex2f(460.0f, 84.0f);
-    glEnd();
-    // ====
-
-    // DOWN RIGHT
-    // ====
-    // down right green border
-    glColor3ub(13, 137, 67);
-    glBegin(GL_POLYGON);
-    glVertex2f(530.0f, 44.0f);
-    glVertex2f(540.0f, 84.0f);
-    glVertex2f(900.0f, 84.0f);
-    glVertex2f(930.0f, 44.0f);
-    glEnd();
-    // down right green stroke
-    glColor3ub(23, 60, 26);
-    glBegin(GL_POLYGON);
-    glVertex2f(540.0f, 84.0f);
-    glVertex2f(540.0f, 89.0f);
-    glVertex2f(900.0f, 89.0f);
-    glVertex2f(900.0f, 84.0f);
-    glEnd();
-    // ====
-
-
-    // table mid
-    glColor3ub(32, 91, 47);
-    glBegin(GL_POLYGON);
-    glVertex2f(40.0f, 44.0f);
-    glVertex2f(40.0f, 756.0f);
-    glVertex2f(960.0f, 756.0f);
-    glVertex2f(960.0f, 44.0f);
-    glEnd();
-
-
-};
-
 
 void init() {
+    // Initializing the Display Mode
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    // Specifying the window dimensions
     glutInitWindowSize(WIDTH, HEIGHT);
+    // Creating the window, with its label
     glutCreateWindow("BCG601 - Billiards 2D");
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glViewport(0, 0, WIDTH, HEIGHT);
     glOrtho(0.0, WIDTH, 0.0, HEIGHT, -100.0, 100.0);
 
+    // At the beginning the number of balls is 16
+    remainingBalls = 16;
+
+    // Initializing the holes
     // down leftmost hole
     holes[0] = new Hole(73, 79, -0.6);
     // down rightmost hole
@@ -228,6 +50,7 @@ void init() {
     // up mid-hole
     holes[5] = new Hole(500, 721, 0.0);
 
+    // Initializing the balls
     // 15
     balls[15] = new Ball(802, 484, 18, 135, 57, 0, 15);
     // 14
@@ -265,105 +88,32 @@ void init() {
     balls[1] = new Ball(654, 400, 251, 199, 54, 0, 1);
     // White ball
     balls[0] = new Ball(300, 400, 255, 255, 255, 0, 0);
-
 }
 
-void drawMidCircle() {
-    GLfloat radius = 100;
-    GLfloat twoPI = 2 * PI;
-    glBegin(GL_POINTS);
-
-    for (float i = 0.0; i <= twoPI / 2;) {
-        glVertex2f(400 + (sin(-i) * radius), 400 + (cos(-i) * radius));
-        i += 0.00001;
-    }
-    glEnd();
-    glFlush();
-}
-
-void drawMidLine() {
-    glColor3f(1.0f, 1.0f, 1.0f);
-    glBegin(GL_LINE_STRIP);
-    glVertex2d(400.0f, 89.0f);
-    glVertex2d(400.0f, 711.0f);
-    glEnd();
-}
-
-// just for demo
-// TODO: Remove
-void drawTableBorders() {
-    glColor3f(0.6f, 0.45f, 0.06f);
-    glBegin(GL_LINE_STRIP);
-    glVertex2d(0.0f, 0.0f);
-    glVertex2d(1000.0f, 0.0f);
-
-    glVertex2d(0.0f, 0.0f);
-    glVertex2d(0.0f, 800.0f);
-
-    glVertex2d(0.0f, 800.0f);
-    glVertex2d(1000.0f, 800.0f);
-
-    glVertex2d(1000.0f, 800.0f);
-    glVertex2d(1000.0f, 0.0f);
-    glEnd();
-
-    glColor3f(0.7f, 0.45f, 0.06f);
-    glBegin(GL_LINE_STRIP);
-    glVertex2d(40.0f, 44.0f);
-    glVertex2d(960.0f, 44.0f);
-
-    glVertex2d(40.0f, 44.0f);
-    glVertex2d(40.0f, 756.0f);
-
-    glVertex2d(40.0f, 756.0f);
-    glVertex2d(960.0f, 756.0f);
-
-    glVertex2d(960.0f, 756.0f);
-    glVertex2d(960.0f, 44.0f);
-    glEnd();
-}
-
+// To check if the mouse left button is pressed or not
+bool onClickEvent;
 
 void draw() {
-
-    // 1000 * 800
-
+    // Specifying the window color
     glClearColor(0.4f, 0.2f, 0.1f, 0.12);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 
-
     glDisable(GL_LIGHTING);
 
-    if (mouseClick && lineX2 != 0) {
+    // Drawing the stick
+    // if the left mouse button has been pressed, and the left end of the stick is anything except zero
+    if (onClickEvent && stick.x2) {
         PlaySound(TEXT("C:\\Users\\User\\CLionProjects\\billiards2D\\hit.wav"), nullptr, SND_FILENAME | SND_ASYNC);
-        glDisable(GL_LIGHTING);
-        glColor3f(1.0f, 1.0f, 1.0f);
-        glBegin(GL_LINES);
-        glVertex2f(lineX1, lineY1);
-        glVertex2f(lineX2, lineY2);
-        glEnd();
+        stick.drawStick();
     }
 
-    // ====
-//    drawTableBorders();
-    // ====
+    // Drawing the table components
+    Table::drawMidLine();
+    Table::drawMidCircle();
+    Table::drawTable();
 
-    // ====
-    drawMidLine();
-    // ====
-
-    drawMidCircle();
-
-    // ====
-    drawTable();
-    // ====
-
-    // drawing holes
-    // x += 15, y += 15
-
-
-
+    // Drawing holes
     // down leftmost hole
     holes[0]->drawHoleCircle();
     // down rightmost hole
@@ -376,26 +126,8 @@ void draw() {
     holes[4]->drawHoleCircle();
     // up mid-hole
     holes[5]->drawHoleCircle();
-    // balls colors
-    /*
-        15: 18, 135, 57
-        14: 155, 97, 77
-        13: 244, 122, 66
-        12: 128, 68, 133
-        11: 223, 39, 40
-        10: 42, 57, 132
-        9: 255, 196, 55
-        8: 52, 60, 54
-        7: 4, 159, 72
-        6: 144, 96, 66
-        5: 241, 121, 38
-        4: 139, 73, 133
-        3: 241, 32, 53
-        2: 37, 57, 114
-        1: 251, 199, 54
-        0: 255, 255, 255
-     */
 
+    // Drawing balls
     // 15
     balls[15]->drawBall();
     // 14
@@ -429,77 +161,107 @@ void draw() {
     // White ball
     balls[0]->drawBall();
 
+    // Finally, empty all these buffers
     glFlush();
     glutSwapBuffers();
 }
 
-void mouseEvent(int button, int state, int mouseX, int mouseY) {
+void mouseEventHandler(int button, int state, int mouseX, int mouseY) {
     mouseY = HEIGHT - mouseY;
     double ballX = balls[0]->x;
     double ballY = balls[0]->y;
-    cerr << "Pressing at: mouseX = " << mouseX << ", mouseY = " << mouseY << '\n';
+
+    cout << "Pressing at: mouseX = " << mouseX << ", mouseY = " << mouseY << '\n';
+
+    // If the left mouse button is pressed
     if (button == GLUT_LEFT_BUTTON)
+        // If the white ball has no speed
         if (!balls[0]->speed) {
+            // If the state of pressing the mouse button is down (pressing)
             if (state == GLUT_DOWN) {
                 double d = ((mouseX - ballX) * (mouseX - ballX)) + ((mouseY - ballY) * (mouseY - ballY));
-                cerr << "Press" << '\n';
-                cout << "HERE: " << ballRadius * ballRadius << " === " << d << '\n';
+                cout << "Press" << '\n';
                 if ((ballRadius * ballRadius) >= d) {
-                    mouseClick = true;
-                    lineX1 = balls[0]->x;
-                    lineY1 = balls[0]->y;
+                    onClickEvent = true;
+                    stick.x1 = (GLfloat) balls[0]->x;
+                    stick.y1 = (GLfloat) balls[0]->y;
                 }
             }
+            // If the left mouse button is released
             if (state == GLUT_UP) {
-                cerr << "Un-press" << '\n';
-                mouseClick = false;
-                printf("%f %f\n", lineX1 - lineX2, lineY1 - lineY2);
-                printf("%lf\n", atan2(double(lineY1 - lineY2), double(lineX1 - lineX2)) * 180 / PI);
-                balls[0]->ballRect = atan2(double(lineY1 - lineY2), double(lineX1 - lineX2)) * 180 / PI;
+                cout << "Un-press" << '\n';
+                onClickEvent = false;
 
-                balls[0]->speed = sqrt(pow(lineX1 - lineX2, 2.0) + pow(lineY1 - lineY2, 2.0)) / 20;
+                // Calculating the angle between the two ends of the stick
+                double xDiff = stick.x1 - stick.x2;
+                double yDiff = stick.y1 - stick.y2;
 
-                lineX1 = lineY1 = lineX2 = lineY2 = 0;
+                // Assigning the new straight line of the ball to follow
+                balls[0]->ballRect = atan2(yDiff, xDiff) * (180 / PI);
 
+                // Assigning the new speed of the white ball after being hit by the stick
+                balls[0]->speed = sqrt(pow(xDiff, 2.0) + pow(yDiff, 2.0));
+                balls[0]->speed *= 0.05;
+
+                // Relocate the stick
+                stick.x1 = stick.y1 = 0;
+                stick.x2 = stick.y2 = 0;
             }
         }
 
 }
 
-void mouseMove(int x, int y) {
-
-    if (mouseClick) {
+void onMouseMovement(int x, int y) {
+    // If the left mouse button has been pressed, change the x2 and y2 coordinated of the stick
+    if (onClickEvent) {
         y = HEIGHT - y;
-        lineX2 = x;
-        lineY2 = y;
+        stick.x2 = (GLfloat) x;
+        stick.y2 = (GLfloat) y;
     }
 }
 
-void timer(int value) {
-    for (auto &ball: balls)
-        ball->move(), ball->checkHole(), ball->checkTableBorder();
+// A timer function for refreshing the display every 1 ms
+void timerCallBack(int value) {
 
-    for (auto &ball : balls) {
+    for (auto &ball: balls) {
+        // Move every ball that has speed
+        // Check every ball hitting a wall, or entering a hole
+        ball->move(), ball->checkTableBorder(), ball->checkHole();
+
+        // Check for colliding between any two balls
         for (auto &targetBall: balls) {
+            // No need to check collision for a ball and itself
             if (ball->id == targetBall->id)
                 continue;
             ball->collision(*targetBall);
         }
+
     }
 
+    // The game ends when only the white ball remains
+    if (remainingBalls == 1) {
+        cout << "GAME OVER" << '\n';
+    }
 
     // Refresh display
     glutPostRedisplay();
-    glutTimerFunc(1, timer, 1);
+    // Calling the timer function recursively
+    glutTimerFunc(1, timerCallBack, 1);
 }
 
 
 int main(int argc, char **argv) {
+    // Initializing the OpenGL Utility Toolkit first
     glutInit(&argc, argv);
+    // Initializing and drawing our basic objects
     init();
-    glutMouseFunc(mouseEvent);
-    glutMotionFunc(mouseMove);
+    // For handling mouse events
+    glutMouseFunc(mouseEventHandler);
+    glutMotionFunc(onMouseMovement);
+    // For displaying our view
     glutDisplayFunc(draw);
-    glutTimerFunc(1, timer, 1);
+    // Registering a timer callback to be triggered every 1ms
+    glutTimerFunc(1, timerCallBack, 1);
+    // For viewing and not closing the window
     glutMainLoop();
 }

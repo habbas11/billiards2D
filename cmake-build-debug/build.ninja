@@ -51,7 +51,7 @@ build cmake_object_order_depends_target_billiards2D: phony || CMakeFiles/billiar
 
 build CMakeFiles/billiards2D.dir/main.cpp.obj: CXX_COMPILER__billiards2D_Debug C$:/Users/User/CLionProjects/billiards2D/main.cpp || cmake_object_order_depends_target_billiards2D
   DEP_FILE = CMakeFiles\billiards2D.dir\main.cpp.obj.d
-  FLAGS = -g -std=gnu++1z
+  FLAGS = -static-libstdc++ -static-libgcc -g -std=gnu++1z
   OBJECT_DIR = CMakeFiles\billiards2D.dir
   OBJECT_FILE_DIR = CMakeFiles\billiards2D.dir
 
@@ -64,7 +64,7 @@ build CMakeFiles/billiards2D.dir/main.cpp.obj: CXX_COMPILER__billiards2D_Debug C
 # Link the executable billiards2D.exe
 
 build billiards2D.exe: CXX_EXECUTABLE_LINKER__billiards2D_Debug CMakeFiles/billiards2D.dir/main.cpp.obj
-  FLAGS = -g
+  FLAGS = -static-libstdc++ -static-libgcc -g
   LINK_LIBRARIES = -lOpenGL32  -lfreeGLUT  -lGLU32  -lwinMM  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\billiards2D.dir
   POST_BUILD = cd .
