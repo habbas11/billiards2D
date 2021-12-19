@@ -41,7 +41,7 @@ public:
         glVertex2f(540.0f, 711.0f);
         glEnd();
 
-        // mid down corner (maybe)
+        // mid down corner
         glColor3ub(159, 104, 40);
         glBegin(GL_POLYGON);
         glVertex2f(460.0f, 0.0f);

@@ -220,20 +220,56 @@ void onMouseMovement(int x, int y) {
     }
 }
 
+// Handling key presses
+void keyboard(unsigned char key, int x, int y) {
+    // If the white ball is not moving
+    if (!balls[0]->speed) {
+        switch (key) {
+            // w or W
+            case 119:
+            case 87:
+                balls[0]->y += 5;
+                break;
+            // s or S
+            case 115:
+            case 83:
+                balls[0]->y -= 5;
+                break;
+            // a or A
+            case 97:
+            case 65:
+                balls[0]->x -= 5;
+                break;
+            // d or D
+            case 100:
+            case 68:
+                balls[0]->x += 5;
+                break;
+            // Escape key
+            case 27:
+                cout << "Exiting..." << '\n';
+                exit(1);
+            default:
+                cout << "Unknown key pressed." << '\n';
+        }
+    }
+    glutPostRedisplay();
+}
+
 // A timer function for refreshing the display every 1 ms
 void timerCallBack(int value) {
 
     for (auto &ball: balls) {
         // Move every ball that has speed
         // Check every ball hitting a wall, or entering a hole
-        ball->move(), ball->checkTableBorder(), ball->checkHole();
+        ball->moveBall(), ball->checkTableBorder(), ball->checkHole();
 
         // Check for colliding between any two balls
         for (auto &targetBall: balls) {
-            // No need to check collision for a ball and itself
+            // No need to check ballsCollision for a ball and itself
             if (ball->id == targetBall->id)
                 continue;
-            ball->collision(*targetBall);
+            ball->ballsCollision(*targetBall);
         }
 
     }
@@ -260,8 +296,12 @@ int main(int argc, char **argv) {
     glutMotionFunc(onMouseMovement);
     // For displaying our view
     glutDisplayFunc(draw);
+    // For handling key presses
+    glutKeyboardFunc(keyboard);
     // Registering a timer callback to be triggered every 1ms
     glutTimerFunc(1, timerCallBack, 1);
     // For viewing and not closing the window
     glutMainLoop();
+
+    return 0;
 }

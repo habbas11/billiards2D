@@ -98,8 +98,8 @@ public:
         glPopMatrix();
     }
 
-    // Moving the ball when there is no collision
-    void move() {
+    // Moving the ball when there is no ballsCollision
+    void moveBall() {
         // The ball will be affected by the friction of the table and the gravity
         if (speed > (frictionForce * gravity)) {
             speed -= frictionForce * gravity;
@@ -124,8 +124,8 @@ public:
                 PlaySound(TEXT("C:\\Users\\User\\CLionProjects\\billiards2D\\falling.wav"), nullptr,
                           SND_FILENAME | SND_ASYNC);
 
-                // If a white Ball
-                if (red == 255 && green == 255 && blue == 255) {
+                // If the white ball
+                if (id == 0) {
                     cout << "====== White Ball got inside a hole ======" << '\n';
                     x = hole->x;
                     y = hole->y;
@@ -213,7 +213,7 @@ public:
     }
 
     // The event to be taken when two balls collide
-    void collision(Ball &targetBall) {
+    void ballsCollision(Ball &targetBall) {
         if (collide(targetBall)) {
             cout << "Balls " << id << " and " << targetBall.id << " collided." << '\n';
 
