@@ -20,6 +20,9 @@
 
 using namespace std;
 
+const float step = 5.0;
+bool gameOver = false;
+const float ASPECT = float(WIDTH) / HEIGHT;
 
 void init() {
     // Initializing the Display Mode
@@ -32,7 +35,6 @@ void init() {
     glLoadIdentity();
     glViewport(0, 0, WIDTH, HEIGHT);
     glOrtho(0.0, WIDTH, 0.0, HEIGHT, -100.0, 100.0);
-
     // At the beginning the number of balls is 16
     remainingBalls = 16;
 
@@ -89,6 +91,23 @@ void init() {
     // White ball
     balls[0] = new Ball(300, 400, 255, 255, 255, 0, 0);
 }
+
+// To make our scene responsive
+void reshapeScene(GLint width, GLint height) {
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    // w is width adjusted for aspect ratio
+    int w = height * 1.0 * ASPECT;
+    int left = (width - w) / 2;
+    glViewport(left, 0, w, height);
+    // fix up the viewport to maintain aspect ratio
+    glOrtho(0.0, WIDTH, 0.0, HEIGHT, -100.0, 100.0);
+    // only the window is changing, not the camera
+    glMatrixMode(GL_MODELVIEW);
+
+    glutPostRedisplay();
+}
+
 
 // To check if the mouse left button is pressed or not
 bool onClickEvent;
@@ -167,6 +186,7 @@ void draw() {
 }
 
 void mouseEventHandler(int button, int state, int mouseX, int mouseY) {
+    cout << button << '\n';
     mouseY = HEIGHT - mouseY;
     double ballX = balls[0]->x;
     double ballY = balls[0]->y;
@@ -221,31 +241,31 @@ void onMouseMovement(int x, int y) {
 }
 
 // Handling key presses
-void keyboard(unsigned char key, int x, int y) {
+void keyboardEventHandler(unsigned char key, int x, int y) {
     // If the white ball is not moving
     if (!balls[0]->speed) {
         switch (key) {
             // w or W
             case 119:
             case 87:
-                balls[0]->y += 5;
+                balls[0]->y += step;
                 break;
-            // s or S
+                // s or S
             case 115:
             case 83:
-                balls[0]->y -= 5;
+                balls[0]->y -= step;
                 break;
-            // a or A
+                // a or A
             case 97:
             case 65:
-                balls[0]->x -= 5;
+                balls[0]->x -= step;
                 break;
-            // d or D
+                // d or D
             case 100:
             case 68:
-                balls[0]->x += 5;
+                balls[0]->x += step;
                 break;
-            // Escape key
+                // Escape key
             case 27:
                 cout << "Exiting..." << '\n';
                 exit(1);
@@ -256,9 +276,28 @@ void keyboard(unsigned char key, int x, int y) {
     glutPostRedisplay();
 }
 
-// A timer function for refreshing the display every 1 ms
-void timerCallBack(int value) {
+void specialButtons(int key, int, int) {
+    // Up arrow
+    if (GLUT_KEY_UP == key)
+        balls[0]->y += step;
 
+    // Down arrow
+    if (GLUT_KEY_DOWN == key)
+        balls[0]->y -= step;
+
+    // Left arrow
+    if (GLUT_KEY_LEFT == key)
+        balls[0]->x -= step;
+
+    // Right arrow
+    if (GLUT_KEY_RIGHT == key)
+        balls[0]->x += step;
+
+    glutPostRedisplay();
+}
+
+// A timer function for refreshing the display every 1 ms
+void timerCallBack(int) {
     for (auto &ball: balls) {
         // Move every ball that has speed
         // Check every ball hitting a wall, or entering a hole
@@ -275,14 +314,29 @@ void timerCallBack(int value) {
     }
 
     // The game ends when only the white ball remains
-    if (remainingBalls == 1) {
+    if (remainingBalls == 1 && !gameOver) {
         cout << "GAME OVER" << '\n';
+        gameOver = true;
     }
 
     // Refresh display
     glutPostRedisplay();
     // Calling the timer function recursively
     glutTimerFunc(1, timerCallBack, 1);
+}
+
+// Changing the dimensions according to the screen dimensions
+void changeSize(int w, int h) {
+    glMatrixMode(GL_PROJECTION);
+    glViewport(0, 0, WIDTH, HEIGHT);
+    glLoadIdentity();
+    glViewport(0, 0, WIDTH, HEIGHT);
+//    glOrtho(0.0, WIDTH, 0.0, HEIGHT, -100.0, 100.0);
+    if (w <= h)
+        glOrtho(0.0, WIDTH, 0.0, HEIGHT * (float) h / (float) w, -100.0, 100.0);
+    else
+        glOrtho(0.0, WIDTH * (float) w / (float) h, 0.0, HEIGHT, -100.0, 100.0);
+//    glMatrixMode(GL_MODELVIEW);
 }
 
 
@@ -296,8 +350,10 @@ int main(int argc, char **argv) {
     glutMotionFunc(onMouseMovement);
     // For displaying our view
     glutDisplayFunc(draw);
+    glutReshapeFunc(reshapeScene);
     // For handling key presses
-    glutKeyboardFunc(keyboard);
+    glutKeyboardFunc(keyboardEventHandler);
+    glutSpecialFunc(specialButtons);
     // Registering a timer callback to be triggered every 1ms
     glutTimerFunc(1, timerCallBack, 1);
     // For viewing and not closing the window

@@ -30,7 +30,7 @@ public:
         // Specifying the stick color
         glColor3ub(150, 128, 87);
         // Increasing the stroke (width) of lines
-        glLineWidth(15.0);
+        glLineWidth(8.0);
         // Drawing
         glBegin(GL_LINES);
         glVertex2f(this->x1, this->y1);
