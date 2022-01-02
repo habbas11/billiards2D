@@ -21,7 +21,6 @@
 using namespace std;
 
 const float step = 5.0;
-bool gameOver = false;
 const float aspect = float(WIDTH) / HEIGHT;
 
 void init() {
@@ -314,9 +313,10 @@ void timerCallBack(int) {
     }
 
     // The game ends when only the white ball remains
-    if (remainingBalls == 1 && !gameOver) {
-        cout << "GAME OVER" << '\n';
-        gameOver = true;
+    if (remainingBalls == 1) {
+        cout << " ++++ GAME OVER ++++ " << '\n';
+        cout << "Exiting..." << '\n';
+        exit(1);
     }
 
     // Refresh display
