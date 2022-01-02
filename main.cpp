@@ -22,7 +22,7 @@ using namespace std;
 
 const float step = 5.0;
 bool gameOver = false;
-const float ASPECT = float(WIDTH) / HEIGHT;
+const float aspect = float(WIDTH) / HEIGHT;
 
 void init() {
     // Initializing the Display Mode
@@ -97,7 +97,7 @@ void reshapeScene(GLint width, GLint height) {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     // w is width adjusted for aspect ratio
-    int w = height * 1.0 * ASPECT;
+    int w = height * 1.0 * aspect;
     int left = (width - w) / 2;
     glViewport(left, 0, w, height);
     // fix up the viewport to maintain aspect ratio
@@ -324,21 +324,6 @@ void timerCallBack(int) {
     // Calling the timer function recursively
     glutTimerFunc(1, timerCallBack, 1);
 }
-
-// Changing the dimensions according to the screen dimensions
-void changeSize(int w, int h) {
-    glMatrixMode(GL_PROJECTION);
-    glViewport(0, 0, WIDTH, HEIGHT);
-    glLoadIdentity();
-    glViewport(0, 0, WIDTH, HEIGHT);
-//    glOrtho(0.0, WIDTH, 0.0, HEIGHT, -100.0, 100.0);
-    if (w <= h)
-        glOrtho(0.0, WIDTH, 0.0, HEIGHT * (float) h / (float) w, -100.0, 100.0);
-    else
-        glOrtho(0.0, WIDTH * (float) w / (float) h, 0.0, HEIGHT, -100.0, 100.0);
-//    glMatrixMode(GL_MODELVIEW);
-}
-
 
 int main(int argc, char **argv) {
     // Initializing the OpenGL Utility Toolkit first

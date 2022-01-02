@@ -19,7 +19,6 @@ using namespace std;
 const GLfloat PI = acos(-1);
 const int HEIGHT = 800;
 const int WIDTH = 1000;
-const double EPS = 1e-18;
 const double ballRadius = 20;
 const double gravity = 9.81;
 
