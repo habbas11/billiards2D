@@ -9,6 +9,13 @@ You can try the game by checking the .exe file under the Executable folder.
 <br>
 <img align="center" alt="Hussam Habbas | GitHub" width="500px" src="/screenshots/2.png" />
 <br>
+<br>
+<img align="center" alt="Hussam Habbas | GitHub" width="500px" src="/screenshots/3.png" />
+<br>
+
+Controls: 
+- Arrow keys and (w, a, s, d) to move the white ball.
+- Hold and release mouse left click to hit the white ball.
 
 Contributors:
 <br>
