@@ -17,11 +17,13 @@ Controls:
 - Arrow keys and (w, a, s, d) to move the white ball.
 - Hold and release mouse left click to hit the white ball.
 
-Contributors:
+Contributors: 🙂
 <br>
 <a href = "https://github.com/omandan">Omar Nofal</a>
 <br>
 <a href = "https://github.com/OmarGhouka">Omar Ghouka</a>
 
+You could also check the 3D version:
+https://github.com/habbas11/billiards3D
 
 
